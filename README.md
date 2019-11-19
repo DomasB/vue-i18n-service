@@ -1,10 +1,6 @@
 # vue-i18n-service
 
-The translation team (not developers) wants **a** file with all the keys to translate. But I love to use translations in **Single File Components**.
-
-And I found a solution to make everyone happy: `vue-i18n-service export|import`
-
-Vue I18n Service makes to manage SFC translations easier in a file. It collects all the `<i18n>` definitions in Single File Components and collects them into a file.
+This fork is rewritten to export translations from Vue SFCs and YAML files to separate YAML files by language.
 
 ## What's the flow:
 `Hello.vue`
@@ -14,116 +10,60 @@ Vue I18n Service makes to manage SFC translations easier in a file. It collects 
 </template>
 
 <i18n>
-{
-  "en": {
-    "hello": "Hi 🙁"
-  },
-  "tr": {
-    "hello": "Selam"
-  }
-}
+en:
+  hello: Hi 🙁
+tr:
+  hello: Selam
 </i18n>
 ```
 
-⬇️`npx vue-i18n-service export > translations.json`
-```json
-{
-  "src/components/Hello.vue": {
-    "en": {
-      "hello": "Hi 🙁"
-    },
-    "tr": {
-      "hello": "Selam"
-    }
-  }
-}
+⬇️`npx vue-i18n-service export`
+`translations.en.yml`
+```yml
+en:
+  hello: Hi 🙁
 ```
 
-✏️`translations.edited.json`
-
-```json
-{
-  "src/components/Hello.vue": {
-    "en": {
-      "hello": "Hello 🙂"
-    },
-    "tr": {
-      "hello": "Merhaba"
-    }
-  }
-}
+`translations.en.yml`
+```yml
+tr:
+  hello: Selam
 ```
 
-### Editing `translations.json` using Web UI
 
-Open [https://f.github.io/vue-i18n-translator/](https://f.github.io/vue-i18n-translator/) and drop `translations.json` file which you've just generated. It will parse it and generate an useful interface to translate.
+### Editing translations using Web UI
 
-![vue-i18n-translator](https://pbs.twimg.com/media/DnDZ5yYX0AAzJyN.png)
-
-⬇️`npx vue-i18n-service import < translations.edited.json`
-```
-updating file src/components/Hello.vue
-```
-```vue
-<template>
-  <div>{{ hello }}</div>
-</template>
-
-<i18n>
-{
-  "en": {
-    "hello": "Hello 🙂"
-  },
-  "tr": {
-    "hello": "Merhaba"
-  }
-}
-</i18n>
-```
-
-And all is OK. Doesn't matter how many files you have, it simply distributes without any problem and any conflict.
+Web editting is remove from this fork
 
 ## Exporting i18n's in SFCs
 
-This will generate a `translations.json` file (or whatever you named).
+This will generate a `translations.<locale>.yml` files for each language in the project.
 
 ```bash
-npx vue-i18n-service export > translations.json
+npx vue-i18n-service export
 ```
 
 It has a simple format:
 
-```json
-{
-  "<file path>": {
-    "<locale>": {
-      "<key>": "<value>"
-    }
-  }
-}
+```yml
+<file path>:
+    <locale>:
+      <key>: <value>
 ```
 
 Here is an example:
 
-```json
-{
-  "src/components/Hello.vue": {
-    "en": {
-      "hello": "Hello"
-    },
-    "tr": {
-      "hello": "Merhaba"
-    }
-  },
-  "src/views/World.vue": {
-    "en": {
-      "world": "World"
-    },
-    "tr": {
-      "world": "Dünya"
-    }
-  }
-}
+```yml
+src/components/Hello.vue:
+  en:
+    hello: Hello
+  tr:
+    hello: Merhaba
+src/views/World.vue:
+  en: 
+    world: World
+  tr:
+    world: Dünya
 ```
 
 ## Importing `translations.json` file to the SFCs
@@ -131,10 +71,18 @@ Here is an example:
 After bulk changing files, you can distribute import all the files calling `import` command.
 
 ```bash
-npx vue-i18n-service import < translations.json
+npx vue-i18n-service import
 ```
 
-This will update `.vue` files and replace them with changes.
+This will update `.vue` and `.lang.yml` files in the project and replace them with changes.
+
+## Checking files for missing translations
+
+You can use this command to check for miising translations:
+
+```bash
+npx vue-i18n-service check
+```
 
 ## License
 

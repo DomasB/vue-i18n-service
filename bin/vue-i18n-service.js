@@ -86,7 +86,7 @@ async function addVueFiles(byFile) {
       fs.readFileSync(file).toString()
     );
     componentAst.customBlocks
-      .filter(block => block.type === "i18n")
+      .filter(block => block.type === "i18n" && Object.keys(block.attrs).length === 0)
       .forEach(block => {
         byFile[file] = yaml.parse(block.content);
       });

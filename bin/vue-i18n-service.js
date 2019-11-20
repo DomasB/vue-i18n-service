@@ -61,7 +61,7 @@ function processVueFiles(file, translations) {
 }
 
 function processYmlFiles(file, translations) {
-  fs.writeFileSync(file, yaml.stringify(translations));
+  fs.writeFileSync(file, yaml.stringify(translations, { schema: 'json' }));
 }
 
 async function runExport() {
